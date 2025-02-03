@@ -208,7 +208,7 @@ resource "aws_iam_role_policy_attachment" "backup_policy" {
 
 # Add the missing vault deletion prevention policy
 data "aws_iam_policy_document" "deny_vault_deletion" {
-  count = var.environment == "platform" ? 1 : 0
+  count = var.environment == "staging" ? 1 : 0
 
   statement {
     effect = "Deny"
