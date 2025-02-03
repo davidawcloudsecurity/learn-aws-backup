@@ -1,5 +1,5 @@
 # learn-aws-backup
-how to deploy backup for aws resources
+how to deploy backup for aws resources - https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html
 
 ## Setup aliases for shortcuts
 ```ruby
