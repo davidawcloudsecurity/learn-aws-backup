@@ -83,19 +83,19 @@ resource "aws_backup_vault" "low" {
 resource "aws_backup_vault_policy" "high" {
   count             = var.environment == "staging" ? 1 : 0
   backup_vault_name = aws_backup_vault.high.name
-  policy            = data.aws_iam_policy_document.deny_vault_deletion[0].json
+  policy            = length(data.aws_iam_policy_document.deny_vault_deletion) > 0 ? data.aws_iam_policy_document.deny_vault_deletion[0].json : ""
 }
 
 resource "aws_backup_vault_policy" "medium" {
   count             = var.environment == "staging" ? 1 : 0
   backup_vault_name = aws_backup_vault.medium.name
-  policy            = data.aws_iam_policy_document.deny_vault_deletion[0].json
+  policy            = length(data.aws_iam_policy_document.deny_vault_deletion) > 0 ? data.aws_iam_policy_document.deny_vault_deletion[0].json : ""
 }
 
 resource "aws_backup_vault_policy" "low" {
   count             = var.environment == "staging" ? 1 : 0
   backup_vault_name = aws_backup_vault.low.name
-  policy            = data.aws_iam_policy_document.deny_vault_deletion[0].json
+  policy            = length(data.aws_iam_policy_document.deny_vault_deletion) > 0 ? data.aws_iam_policy_document.deny_vault_deletion[0].json : ""
 }
 
 # Define the daily backup plan (High Priority)
