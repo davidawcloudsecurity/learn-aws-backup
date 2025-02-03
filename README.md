@@ -72,5 +72,38 @@ resource "aws_db_instance" "example" {
   }
 }
 ```
-
 By tagging your resources and using the `aws_backup_selection` resource, you can specify which EC2 instances and RDS databases to back up according to your backup plans.
+## Best Practise
+### For EC2 and RDS backups using AWS Backup, the best practices include:
+Backup Frequency:
+```bash
+EC2: Daily incremental backups for system volumes and weekly full backups.
+RDS: Daily automated backups with frequent transaction log backups.
+```
+Retention Policies:
+```bash
+EC2: Retain daily backups for 7 days, weekly backups for 4 weeks, and monthly backups for 12 months.
+RDS: Retain daily backups for 7 days and ensure long-term retention for compliance requirements.
+```
+Lifecycle Policies:
+```bash
+Move backups to cold storage after 90 days.
+Delete backups after 365 days.
+```
+Encryption:
+```bash
+Enable encryption for all backups using AWS KMS.
+```
+Tagging:
+```bash
+Use consistent tagging for identifying and managing backups.
+```
+Cross-Region and Cross-Account Backups:
+```bash
+Enable cross-region and cross-account backups for disaster recovery.
+```
+Recovery Testing:
+```bash
+Regularly test recovery processes to ensure backups are restorable.
+```
+These practices ensure your data is secure, recoverable, and compliant with organizational policies.
