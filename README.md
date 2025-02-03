@@ -1,6 +1,16 @@
 # learn-aws-backup
 how to deploy backup for aws resources
 
+## Setup aliases for shortcuts
+```ruby
+alias tf="terraform"; alias tfa="terraform apply --auto-approve"; alias tfd="terraform destroy --auto-approve"; alias tfm="terraform init; terraform fmt; terraform validate; terraform plan"
+```
+## Run this if running at cloudshell
+How to install terraform - https://developer.hashicorp.com/terraform/install
+```ruby
+sudo yum install -y yum-utils shadow-utils; sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo; sudo yum -y install terraform; terraform init
+```
+
 In the provided Terraform script, the terms "low," "medium," and "high" appear to be used to categorize backup vaults and plans based on their priority or importance. This categorization can be mapped to different backup frequencies like daily, monthly, and yearly, but the exact mapping is not explicitly defined in the script.
 
 ### Mapping Low, Medium, and High to Daily, Monthly, and Yearly
