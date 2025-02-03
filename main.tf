@@ -1,4 +1,4 @@
-variable "deployment_environment" {
+variable "environment" {
   description = "The deployment environment"
   type        = string
 }
@@ -34,13 +34,6 @@ locals {
     "gcc-prod" = "cron(0 0 1 1 ? *)"     # Midnight on January 1st
   }
 
-  # Add random string resource for unique naming
-  resource "random_string" "id" {
-    length  = 6
-    special = false
-    upper   = false
-  }
-
   # Define the schedule for daily backups (High Priority)
   daily_schedule_expression   = lookup(local.daily_schedule_expression_map, var.deployment_environment, "cron(0 0 * * ? *)")
   
@@ -59,6 +52,13 @@ locals {
   high_cold_storage_after = 120
   mid_cold_storage_after  = 120
   low_cold_storage_after  = 120
+}
+
+# Add random string resource for unique naming
+resource "random_string" "id" {
+    length  = 6
+    special = false
+    upper   = false
 }
 
 # Define a backup vault for high-priority backups (Daily)
@@ -81,7 +81,7 @@ resource "aws_backup_vault" "low" {
 
 # Define policies to prevent deletion of backup vaults
 resource "aws_backup_vault_policy" "high" {
-  count             = var.environment == "platform" ? 1 : 0
+  count             = var.environment == "staging" ? 1 : 0
   backup_vault_name = aws_backup_vault.high.name
   policy            = data.aws_iam_policy_document.deny_vault_deletion[0].json
 }
@@ -93,7 +93,7 @@ resource "aws_backup_vault_policy" "medium" {
 }
 
 resource "aws_backup_vault_policy" "low" {
-  count             = var.environment == "platform" ? 1 : 0
+  count             = var.environment == "staging" ? 1 : 0
   backup_vault_name = aws_backup_vault.low.name
   policy            = data.aws_iam_policy_document.deny_vault_deletion[0].json
 }
