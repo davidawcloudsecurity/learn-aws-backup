@@ -35,13 +35,13 @@ locals {
   }
 
   # Define the schedule for daily backups (High Priority)
-  daily_schedule_expression   = lookup(local.daily_schedule_expression_map, var.deployment_environment, "cron(0 0 * * ? *)")
+  daily_schedule_expression   = lookup(local.daily_schedule_expression_map, var.environment, "cron(0 0 * * ? *)")
   
   # Define the schedule for monthly backups (Medium Priority)
-  monthly_schedule_expression = lookup(local.monthly_schedule_expression_map, var.deployment_environment, "cron(0 0 1 * ? *)")
+  monthly_schedule_expression = lookup(local.monthly_schedule_expression_map, var.environment, "cron(0 0 1 * ? *)")
   
   # Define the schedule for yearly backups (Low Priority)
-  yearly_schedule_expression  = lookup(local.yearly_schedule_expression_map, var.deployment_environment, "cron(0 0 1 1 ? *)")
+  yearly_schedule_expression  = lookup(local.yearly_schedule_expression_map, var.environment, "cron(0 0 1 1 ? *)")
   
   # Retention periods for each type of backup
   daily_delete_after   = 7     # Retain daily backups for 7 days (High Priority)
@@ -107,7 +107,7 @@ resource "aws_backup_plan" "daily_backup_plan" {
     schedule          = local.daily_schedule_expression
     lifecycle {
       delete_after = local.daily_delete_after
-      cold_storage_after = var.deployment_environment != "gcc-prod" ? null : local.high_cold_storage_after
+      cold_storage_after = var.environment != "gcc-prod" ? null : local.high_cold_storage_after
     }
   }
 }
@@ -121,7 +121,7 @@ resource "aws_backup_plan" "monthly_backup_plan" {
     schedule          = local.monthly_schedule_expression
     lifecycle {
       delete_after = local.monthly_delete_after
-      cold_storage_after = var.deployment_environment != "gcc-prod" ? null : local.mid_cold_storage_after
+      cold_storage_after = var.environment != "gcc-prod" ? null : local.mid_cold_storage_after
     }
   }
 }
@@ -135,7 +135,7 @@ resource "aws_backup_plan" "yearly_backup_plan" {
     schedule          = local.yearly_schedule_expression
     lifecycle {
       delete_after = local.yearly_delete_after
-      cold_storage_after = var.deployment_environment != "gcc-prod" ? null : local.low_cold_storage_after
+      cold_storage_after = var.environment != "gcc-prod" ? null : local.low_cold_storage_after
     }
   }
 }
@@ -208,7 +208,7 @@ resource "aws_iam_role_policy_attachment" "backup_policy" {
 
 # Add the missing vault deletion prevention policy
 data "aws_iam_policy_document" "deny_vault_deletion" {
-  count = var.deployment_environment == "platform" ? 1 : 0
+  count = var.environment == "platform" ? 1 : 0
 
   statement {
     effect = "Deny"
