@@ -104,7 +104,7 @@ resource "aws_backup_plan" "daily_backup_plan" {
     schedule          = local.daily_schedule_expression
     lifecycle {
       delete_after = local.daily_delete_after
-      cold_storage_after = var.environment != "gcc-prod" ? null : local.high_cold_storage_after
+      cold_storage_after = var.environment != "staging" ? null : local.high_cold_storage_after
     }
   }
 }
@@ -118,7 +118,7 @@ resource "aws_backup_plan" "monthly_backup_plan" {
     schedule          = local.monthly_schedule_expression
     lifecycle {
       delete_after = local.monthly_delete_after
-      cold_storage_after = var.environment != "gcc-prod" ? null : local.mid_cold_storage_after
+      cold_storage_after = var.environment != "staging" ? null : local.mid_cold_storage_after
     }
   }
 }
@@ -132,7 +132,7 @@ resource "aws_backup_plan" "yearly_backup_plan" {
     schedule          = local.yearly_schedule_expression
     lifecycle {
       delete_after = local.yearly_delete_after
-      cold_storage_after = var.environment != "gcc-prod" ? null : local.low_cold_storage_after
+      cold_storage_after = var.environment != "staging" ? null : local.low_cold_storage_after
     }
   }
 }
@@ -176,6 +176,25 @@ resource "aws_backup_selection" "low_backup_selection" {
     type  = "STRINGEQUALS"
     key   = "backup_plan"
     value = "Low"
+  }
+}
+
+data "aws_iam_policy_document" "deny_vault_deletion" {
+  count = var.environment == "staging" ? 1 : 0
+  statement {
+    effect = "Deny"
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+
+    actions = [
+      "backup:DeleteBackupVault",
+      "backup:DeleteRecoveryPoint"
+    ]
+
+    resources = ["*"]
   }
 }
 
