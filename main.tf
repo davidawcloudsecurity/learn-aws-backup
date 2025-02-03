@@ -202,49 +202,9 @@ resource "aws_iam_role" "role_backup" {
 
 # Attach AWS Backup service role policy
 resource "aws_iam_role_policy_attachment" "backup_policy" {
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForBackup"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForBackup",
+    "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForRestores"
   role       = aws_iam_role.role_backup.name
-}
-
-# Add the missing vault deletion prevention policy
-data "aws_iam_policy_document" "deny_vault_deletion" {
-  count = var.environment == "staging" ? 1 : 0
-
-  statement {
-    effect = "Deny"
-    actions = [
-      "backup:DeleteBackupVault",
-      "backup:DeleteRecoveryPoint"
-    ]
-    resources = [
-      aws_backup_vault.high.arn,
-      aws_backup_vault.medium.arn,
-      aws_backup_vault.low.arn
-    ]
-    principals {
-      type = "AWS"
-      identifiers = ["*"]
-    }
-  }
-
-  statement {
-    effect = "Allow"
-    actions = [
-      "backup:CreateBackupVault",
-      "backup:StartBackupJob",
-      "backup:GetBackupVaultNotifications",
-      "backup:PutBackupVaultNotifications"
-    ]
-    resources = [
-      aws_backup_vault.high.arn,
-      aws_backup_vault.medium.arn,
-      aws_backup_vault.low.arn
-    ]
-    principals {
-      type = "AWS"
-      identifiers = ["*"]
-    }
-  }
 }
 
 # Add outputs for the created resources
