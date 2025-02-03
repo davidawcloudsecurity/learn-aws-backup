@@ -17,21 +17,18 @@ locals {
     dev       = "cron(0 0 * * ? *)"      # Midnight every day
     staging   = "cron(0 0 * * ? *)"      # Midnight every day
     prod      = "cron(0 0 * * ? *)"      # Midnight every day
-    "gcc-prod" = "cron(0 0 * * ? *)"     # Midnight every day
   }
 
   monthly_schedule_expression_map = {
     dev       = "cron(0 0 1 * ? *)"      # Midnight on the 1st of every month
     staging   = "cron(0 0 1 * ? *)"      # Midnight on the 1st of every month
     prod      = "cron(0 0 1 * ? *)"      # Midnight on the 1st of every month
-    "gcc-prod" = "cron(0 0 1 * ? *)"     # Midnight on the 1st of every month
   }
 
   yearly_schedule_expression_map = {
     dev       = "cron(0 0 1 1 ? *)"      # Midnight on January 1st
     staging   = "cron(0 0 1 1 ? *)"      # Midnight on January 1st
     prod      = "cron(0 0 1 1 ? *)"      # Midnight on January 1st
-    "gcc-prod" = "cron(0 0 1 1 ? *)"     # Midnight on January 1st
   }
 
   # Define the schedule for daily backups (High Priority)
