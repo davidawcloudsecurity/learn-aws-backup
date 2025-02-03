@@ -208,13 +208,12 @@ resource "aws_iam_role_policy_attachment" "backup_policy" {
 
 # Add the missing vault deletion prevention policy
 data "aws_iam_policy_document" "deny_vault_deletion" {
-  count = var.environment == "staging" ? 1 : 0
+  count = var.environment == "platform" ? 1 : 0
 
   statement {
     effect = "Deny"
     actions = [
       "backup:DeleteBackupVault",
-      "backup:DeleteBackupVaultAccessPolicy",
       "backup:DeleteRecoveryPoint"
     ]
     resources = [
@@ -232,8 +231,6 @@ data "aws_iam_policy_document" "deny_vault_deletion" {
     effect = "Allow"
     actions = [
       "backup:CreateBackupVault",
-      "backup:PutBackupVaultAccessPolicy",
-      "backup:GetBackupVaultAccessPolicy",
       "backup:StartBackupJob",
       "backup:GetBackupVaultNotifications",
       "backup:PutBackupVaultNotifications"
