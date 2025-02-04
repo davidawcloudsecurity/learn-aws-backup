@@ -41,14 +41,14 @@ locals {
   yearly_schedule_expression  = lookup(local.yearly_schedule_expression_map, var.environment, "cron(0 0 1 1 ? *)")
   
   # Retention periods for each type of backup
-  daily_delete_after   = 7     # Retain daily backups for 7 days (High Priority)
-  monthly_delete_after = 30    # Retain monthly backups for 30 days (Medium Priority)
-  yearly_delete_after  = 365   # Retain yearly backups for 365 days (Low Priority)
+  daily_delete_after   = 120     # Retain daily backups for 7 days (High Priority)
+  monthly_delete_after = 365    # Retain monthly backups for 30 days (Medium Priority)
+  yearly_delete_after  = 1825   # Retain yearly backups for 365 days (Low Priority)
 
   # Cold storage settings (example values, you can adjust as needed)
-  high_cold_storage_after = 120
-  mid_cold_storage_after  = 120
-  low_cold_storage_after  = 120
+  high_cold_storage_after = 90
+  mid_cold_storage_after  = 60
+  low_cold_storage_after  = 30
 }
 
 # Add random string resource for unique naming
