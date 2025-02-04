@@ -7,7 +7,7 @@ variable "environment" {
 variable "tags" {
   description = "Additional tags to apply to all resources"
   type        = map(string)
-  default     = "terraform"
+  default     = {}
 }
 
 locals {
@@ -98,7 +98,10 @@ resource "aws_backup_vault_policy" "low" {
 # Define the daily backup plan (High Priority)
 resource "aws_backup_plan" "daily_backup_plan" {
   name = "daily_backup_plan-${random_string.id.result}"
-  tags = var.tags
+  tags = {
+    Environment = var.environment
+    AWS_Backup     = "terraform"
+  }
   rule {
     rule_name         = "daily_backup_rule"
     target_vault_name = aws_backup_vault.high.name
@@ -113,7 +116,10 @@ resource "aws_backup_plan" "daily_backup_plan" {
 # Define the monthly backup plan (Medium Priority)
 resource "aws_backup_plan" "monthly_backup_plan" {
   name = "monthly_backup_plan-${random_string.id.result}"
-  tags = var.tags
+  tags = {
+    Environment = var.environment
+    AWS_Backup     = "terraform"
+  }
   rule {
     rule_name         = "monthly_backup_rule"
     target_vault_name = aws_backup_vault.medium.name
@@ -128,7 +134,10 @@ resource "aws_backup_plan" "monthly_backup_plan" {
 # Define the yearly backup plan (Low Priority)
 resource "aws_backup_plan" "yearly_backup_plan" {
   name = "yearly_backup_plan-${random_string.id.result}"
-  tags = var.tags
+  tags = {
+    Environment = var.environment
+    AWS_Backup     = "terraform"
+  }
   rule {
     rule_name         = "yearly_backup_rule"
     target_vault_name = aws_backup_vault.low.name
